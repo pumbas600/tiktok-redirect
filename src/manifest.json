@@ -5,6 +5,7 @@
   "description": "Redirects TikTok links to the equivalent page so that the videos can be played in the web.",
   "content_scripts": [
     {
+      "matches": ["https://www.tiktok.com/*"],
       "js": ["main.js"]
     }
   ]
