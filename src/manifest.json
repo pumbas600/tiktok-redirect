@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "TikTok Redirect",
   "version": "1.0.0",
-  "description": "Redirects TikTok links to the equivalent page so that the videos can be played in the web.",
+  "description": "Redirects TikTok URLs so the videos can be played in the browser.",
   "content_scripts": [
     {
       "matches": ["https://www.tiktok.com/*"],

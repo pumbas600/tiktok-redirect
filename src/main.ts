@@ -3,9 +3,19 @@ const IS_CHROME = typeof chrome !== "undefined";
 
 const TIKTOK_URL_PATTERN = "https://www.tiktok.com/*";
 
+/** The Chrome and Firefox types aren't identifical, but they are for `redirectUrl`. */
+type BlockingResponse = Pick<
+  browser.webRequest.BlockingResponse | chrome.webRequest.BlockingResponse,
+  "redirectUrl"
+>;
+
+type OnBeforeRequestDetails =
+  | browser.webRequest._OnBeforeRequestDetails
+  | chrome.webRequest.WebRequestBodyDetails;
+
 function onBeforeTikTokRequest(
-  details: browser.webRequest._OnBeforeRequestDetails,
-): browser.webRequest.BlockingResponse {
+  details: OnBeforeRequestDetails,
+): BlockingResponse {
   if (details.method !== "GET") {
     return {};
   }
@@ -21,9 +31,19 @@ function onBeforeTikTokRequest(
 }
 
 function setup() {
-  browser.webRequest.onBeforeRequest.addListener(onBeforeTikTokRequest, {
-    urls: [TIKTOK_URL_PATTERN],
-  });
+  const filter = { urls: [TIKTOK_URL_PATTERN] };
+
+  if (IS_FIREFOX) {
+    browser.webRequest.onBeforeRequest.addListener(
+      onBeforeTikTokRequest,
+      filter,
+    );
+  } else if (IS_CHROME) {
+    chrome.webRequest.onBeforeRequest.addListener(
+      onBeforeTikTokRequest,
+      filter,
+    );
+  }
 }
 
 setup();
